@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALM Drill Master: Mô Phỏng Phương Pháp Nghe - Nói</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #0f172a, #1e1b4b, #090d16);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.78);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+        .neon-border {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+        }
+        .slot-highlight {
+            animation: pulseGlow 1.5s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake-anim {
+            animation: shake 0.35s ease-in-out;
+        }
+        .btn-game {
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-game:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+        .btn-game:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body class="p-3 sm:p-6">
+
+    <!-- Main Container -->
+    <div class="max-w-6xl mx-auto space-y-5">
+
+        <!-- Header -->
+        <header class="glass-card rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 neon-border">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-3xl shadow-lg shrink-0">
+                    🎧
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 rounded-full">
+                            Audio-Lingual Method (ALM)
+                        </span>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/30 rounded-full">
+                            Behaviorism: Stimulus → Response → Reinforcement
+                        </span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+                        ALM Drill Master: Lớp Học Nghe – Nói Tương Tác
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-300">
+                        Trải nghiệm 4 kỹ thuật luyện mẫu câu (Pattern Drills) & cú "Plot Twist" giao tiếp thực tế để thấy rõ thế mạnh và hạn chế của ALM.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Sound & Voice Controls -->
+            <div class="flex items-center gap-2 self-end md:self-center">
+                <button id="toggleSoundBtn" onclick="toggleAudio()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs sm:text-sm font-medium flex items-center gap-2 transition">
+                    <span id="soundIcon">🔊</span>
+                    <span id="soundLabel">Âm thanh & Giọng đọc: BẬT</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2">
+            <button onclick="switchTab('game')" id="tabBtn-game" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+                <span>🎮</span> 1. Chơi Game Mô Phỏng (5 Vòng)
+            </button>
+            <button onclick="switchTab('sandbox')" id="tabBtn-sandbox" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700">
+                <span>🔬</span> 2. Phòng Thí Nghiệm 4 Kỹ Thuật Drill (Dùng Thuyết Trình)
+            </button>
+            <button onclick="switchTab('debrief')" id="tabBtn-debrief" class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700">
+                <span>📊</span> 3. Phân Tích Thế Mạnh & Hạn Chế ALM
+            </button>
+        </nav>
+
+        <!-- ==================== TAB 1: INTERACTIVE GAME ==================== -->
+        <div id="tab-game" class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+            <!-- Left Column: Classroom Stage (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                <div class="glass-card rounded-2xl p-4 sm:p-6 relative overflow-hidden">
+
+                    <!-- Top Bar: Round Progress & Timer -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-700/70">
+                        <div class="flex items-center gap-2">
+                            <span id="roundBadge" class="px-3 py-1 rounded-lg bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 font-bold text-xs sm:text-sm">
+                                Vòng 1 / 5
+                            </span>
+                            <h2 id="roundTitle" class="font-bold text-base sm:text-lg text-white">
+                                Repetition Drill (Luyện Lặp Lại Nguyên Văn)
+                            </h2>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-xs sm:text-sm font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg">
+                                🔥 Chuỗi Thói Quen (Habit Streak): <span id="streakCount" class="font-extrabold">0</span>
+                            </div>
+                            <div class="text-xs sm:text-sm font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-lg">
+                                ⭐ Điểm: <span id="scoreCount" class="font-extrabold">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Bar -->
+                    <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden my-3">
+                        <div id="timerBar" class="bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 h-full transition-all duration-200" style="width: 100%;"></div>
+                    </div>
+
+                    <!-- Teacher Stimulus Box (S -> R -> R) -->
+                    <div id="teacherBox" class="mt-3 p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-3.5">
+                            <div id="speakerAvatar" class="w-12 h-12 rounded-2xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-2xl shrink-0">
+                                👨‍🏫
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span id="speakerRole" class="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                                        Giáo viên (Stimulus - Kích thích mẫu)
+                                    </span>
+                                    <span id="drillTypeTag" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                                        Không giải thích ngữ pháp • Chỉ nghe & bắt chước!
+                                    </span>
+                                </div>
+                                <p id="teacherPrompt" class="text-base sm:text-xl font-bold text-white mt-1">
+                                    "I am going to the post office."
+                                </p>
+                                <p id="teacherSubPrompt" class="text-xs sm:text-sm text-amber-300 mt-1 font-medium">
+                                    🎯 Nhiệm vụ: Nghe mẫu câu và bấm các từ theo đúng thứ tự thật nhanh!
+                                </p>
+                            </div>
+                        </div>
+
+                        <button onclick="speakCurrentPrompt()" class="px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm flex items-center gap-1.5 shrink-0 shadow-md">
+                            <span>🔊</span> Nghe mẫu
+                        </button>
+                    </div>
+
+                    <!-- Cue Banner (For Substitution / Transformation Drills) -->
+                    <div id="cueBanner" class="hidden mt-3 p-3 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">⚡</span>
+                            <span class="text-xs sm:text-sm font-bold text-amber-200">TỪ GỢI Ý / LỆNH BIẾN ĐỔI (CUE):</span>
+                        </div>
+                        <span id="cueValue" class="px-3 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-sm sm:text-base slot-highlight">
+                            supermarket
+                        </span>
+                    </div>
+
+                    <!-- Interactive Response Area -->
+                    <div id="responseArea" class="mt-5 min-h-[190px] flex flex-col justify-center">
+                        <!-- Dynamically populated by JS -->
+                    </div>
+
+                    <!-- Immediate Reinforcement / Error Correction Banner -->
+                    <div id="feedbackBanner" class="hidden mt-4 p-3.5 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <span id="feedbackIcon" class="text-xl">✅</span>
+                            <div>
+                                <div id="feedbackTitle" class="font-bold">Củng cố tích cực (Positive Reinforcement)!</div>
+                                <div id="feedbackDesc" class="text-slate-200 text-xs mt-0.5">Phản xạ hoàn hảo! Thói quen cấu trúc đang được hình thành.</div>
+                            </div>
+                        </div>
+                        <button id="nextStepBtn" onclick="nextQuestion()" class="px-4 py-2 rounded-xl bg-white text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-100 shrink-0 shadow">
+                            Tiếp tục →
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Explanation Box: What is happening pedagogically right now? -->
+                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-indigo-500 flex items-start gap-3">
+                    <div class="text-2xl">💡</div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-bold text-indigo-300 uppercase tracking-wider">
+                            Góc nhìn Sư phạm trong vòng này (Pedagogical Insight)
+                        </h3>
+                        <p id="pedagogicalNote" class="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
+                            Trong phương pháp ALM, giáo viên đóng vai trò như "nhạc trưởng" đưa ra kích thích (Stimulus). Học sinh không được nhìn mặt chữ trước hay dịch sang tiếng mẹ đẻ, mà phải nghe và lặp lại nguyên văn để luyện phát âm chuẩn và tạo phản xạ cơ học.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Pedagogical Gauges & Behaviorist Loop (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+
+                <!-- Real-Time ALM Metrics -->
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-700/70 pb-3">
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-white">📊 Chỉ Số Năng Lực Người Học</h3>
+                            <p class="text-xs text-slate-400">Biến đổi theo thời gian thực khi luyện ALM</p>
+                        </div>
+                        <button onclick="resetGame()" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600">
+                            🔄 Chơi lại
+                        </button>
+                    </div>
+
+                    <!-- Gauge 1: Structural Reflex & Pronunciation -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-emerald-300">🎯 Phản xạ mẫu câu & Phát âm</span>
+                            <span id="gaugeReflexText" class="text-emerald-400 font-bold">25%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="gaugeReflexBar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 25%"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Thế mạnh cốt lõi của ALM: Nhại âm và thuộc cấu trúc cực nhanh.</p>
+                    </div>
+
+                    <!-- Gauge 2: Mechanical Accuracy -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-sky-300">📏 Độ chính xác cấu trúc (Accuracy)</span>
+                            <span id="gaugeAccuracyText" class="text-sky-400 font-bold">30%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="gaugeAccuracyBar" class="h-full bg-sky-500 transition-all duration-500" style="width: 30%"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Tăng cao nhờ sửa lỗi tức thì (Immediate Error Correction).</p>
+                    </div>
+
+                    <!-- Gauge 3: Drill Fatigue / Boredom -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-amber-300">🥱 Độ mỏi / Nhàm chán (Drill Fatigue)</span>
+                            <span id="gaugeFatigueText" class="text-amber-400 font-bold">10%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="gaugeFatigueBar" class="h-full bg-amber-500 transition-all duration-500" style="width: 10%"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Hạn chế ALM: Lặp đi lặp lại nhiều dễ gây mệt mỏi cơ học.</p>
+                    </div>
+
+                    <!-- Gauge 4: Spontaneous Real-Life Communication -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-rose-300">💬 Giao tiếp tự nhiên ngoài kịch bản</span>
+                            <span id="gaugeCommText" class="text-rose-400 font-bold">12%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="gaugeCommBar" class="h-full bg-rose-500 transition-all duration-500" style="width: 12%"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Điểm yếu lớn nhất: Khó tự diễn đạt ý cá nhân khi đề bài mở.</p>
+                    </div>
+                </div>
+
+                <!-- Behaviorism Diagram Card -->
+                <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
+                    <h3 class="font-bold text-xs sm:text-sm text-indigo-300 uppercase tracking-wider">
+                        🧠 Cơ Chế Tâm Lý Học Hành Vi (Skinner)
+                    </h3>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div id="stepStimulus" class="p-2.5 rounded-xl bg-indigo-500/20 border border-indigo-400/40">
+                            <div class="text-lg">📣</div>
+                            <div class="font-bold text-white mt-1">1. Stimulus</div>
+                            <div class="text-[10px] text-slate-300">Giáo viên đưa câu mẫu / từ gợi ý</div>
+                        </div>
+                        <div id="stepResponse" class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700">
+                            <div class="text-lg">🗣️</div>
+                            <div class="font-bold text-white mt-1">2. Response</div>
+                            <div class="text-[10px] text-slate-300">Học sinh lập tức lặp lại / thay thế</div>
+                        </div>
+                        <div id="stepReinforce" class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700">
+                            <div class="text-lg">🏆</div>
+                            <div class="font-bold text-white mt-1">3. Reinforce</div>
+                            <div class="text-[10px] text-slate-300">Khen thưởng hoặc sửa lỗi ngay</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: INTERACTIVE DRILL SANDBOX (FOR CLASS PRESENTATION) ==================== -->
+        <div id="tab-sandbox" class="hidden space-y-5">
+            <div class="glass-card rounded-2xl p-5 sm:p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Công cụ minh họa trực tiếp trên lớp</span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-white mt-0.5">
+                            🔬 Phòng Thí Nghiệm 4 Kỹ Thuật Pattern Drills Kinh Điển Của ALM
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                            Bấm vào từng loại Drill bên dưới để trình chiếu cách giáo viên điều khiển lớp học trong phương pháp Nghe – Nói.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Drill Type Selector Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 my-5">
+                    <button onclick="loadSandboxDrill(0)" id="sbBtn-0" class="p-3.5 rounded-xl border text-left transition bg-indigo-600/30 border-indigo-400 text-white">
+                        <div class="font-bold text-sm">1. Repetition Drill</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Lặp lại nguyên văn mẫu câu</div>
+                    </button>
+                    <button onclick="loadSandboxDrill(1)" id="sbBtn-1" class="p-3.5 rounded-xl border text-left transition bg-slate-800/70 border-slate-700 text-slate-300 hover:bg-slate-800">
+                        <div class="font-bold text-sm">2. Substitution Drill</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Thay thế từ vào ô trống cấu trúc</div>
+                    </button>
+                    <button onclick="loadSandboxDrill(2)" id="sbBtn-2" class="p-3.5 rounded-xl border text-left transition bg-slate-800/70 border-slate-700 text-slate-300 hover:bg-slate-800">
+                        <div class="font-bold text-sm">3. Transformation Drill</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Biến đổi câu (Khẳng định ↔ Phủ định/Hỏi)</div>
+                    </button>
+                    <button onclick="loadSandboxDrill(3)" id="sbBtn-3" class="p-3.5 rounded-xl border text-left transition bg-slate-800/70 border-slate-700 text-slate-300 hover:bg-slate-800">
+                        <div class="font-bold text-sm">4. Question & Answer Drill</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Phản xạ hỏi - đáp nhanh theo mẫu</div>
+                    </button>
+                </div>
+
+                <!-- Sandbox Interactive Stage -->
+                <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-700 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span id="sbTitle" class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-xs sm:text-sm">
+                            Kỹ thuật 1: Repetition Drill
+                        </span>
+                        <span id="sbRule" class="text-xs text-amber-300 font-medium">
+                            📌 Nguyên tắc: Không viết lên bảng trước – Học sinh nghe bằng tai và nhại lại ngay lập tức.
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pt-2">
+                        <!-- Teacher Side -->
+                        <div class="p-4 rounded-xl bg-slate-800/90 border border-indigo-500/30 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-indigo-400 uppercase">👨‍🏫 Giáo viên (Teacher Cue)</span>
+                                <button onclick="speakText(document.getElementById('sbTeacherText').innerText)" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold">
+                                    🔊 Phát âm mẫu
+                                </button>
+                            </div>
+                            <p id="sbTeacherText" class="text-lg font-bold text-white"></p>
+                            <p id="sbCueNote" class="text-xs text-amber-300"></p>
+                        </div>
+
+                        <!-- Student Side -->
+                        <div class="p-4 rounded-xl bg-slate-800/90 border border-emerald-500/30 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-emerald-400 uppercase">🙋‍♂️ Cả lớp đồng thanh (Choral Response)</span>
+                                <button onclick="speakText(document.getElementById('sbStudentText').innerText)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold">
+                                    🔊 Nghe học sinh đáp
+                                </button>
+                            </div>
+                            <p id="sbStudentText" class="text-lg font-bold text-emerald-300"></p>
+                            <p id="sbStudentNote" class="text-xs text-slate-300"></p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Cue Switcher inside Sandbox -->
+                    <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold text-slate-400 mr-2">Thử đổi từ gợi ý (Click để đổi Cue):</span>
+                        <div id="sbCueButtons" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: DEBRIEFING STRENGTHS & LIMITATIONS ==================== -->
+        <div id="tab-debrief" class="hidden space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Strengths Card -->
+                <div class="glass-card rounded-2xl p-5 sm:p-6 border-t-4 border-t-emerald-500 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
+                            ✅
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-white">Thế Mạnh Của Phương Pháp ALM</h2>
+                            <p class="text-xs text-emerald-300">Được chứng minh qua Vòng 1 → Vòng 4 trong Game</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-200">
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-emerald-300 block mb-0.5">1. Phát triển kỹ năng Nghe & Phát âm chuẩn ngay từ đầu:</strong>
+                            Học sinh nghe trực tiếp giọng mẫu và bắt chước ngữ điệu, trọng âm ngay lập tức trước khi nhìn mặt chữ.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-emerald-300 block mb-0.5">2. Hình thành phản xạ cấu trúc tự động (Automaticity):</strong>
+                            Nhờ các bài tập <em>Substitution</em> và <em>Transformation Drills</em>, học sinh bật ra câu đúng ngữ pháp cực nhanh mà không cần dịch ngầm từ tiếng Việt.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-emerald-300 block mb-0.5">3. Phù hợp với người mới bắt đầu & lớp học sĩ số lớn:</strong>
+                            Kỹ thuật đồng thanh (Choral Drills) giúp học sinh rụt rè tự tin nói theo tập thể và giáo viên dễ quản lý lớp học.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-emerald-300 block mb-0.5">4. Hạn chế lỗi sai hóa thạch (Fossilization):</strong>
+                            Lỗi phát âm hoặc cấu trúc được giáo viên sửa ngay lập tức (Immediate Correction), giúp củng cố thói quen đúng.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Weaknesses Card -->
+                <div class="glass-card rounded-2xl p-5 sm:p-6 border-t-4 border-t-rose-500 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl font-bold">
+                            ⚠️
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-white">Hạn Chế Của Phương Pháp ALM</h2>
+                            <p class="text-xs text-rose-300">Bộc lộ rõ nét ở Vòng 5 (Tình huống thực tế mở)</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-200">
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-rose-300 block mb-0.5">1. Thiếu năng lực giao tiếp tự nhiên (Communicative Competence):</strong>
+                            Học sinh giống như "vẹt học nói" — rất giỏi lặp lại mẫu câu cố định nhưng lại đứng hình khi gặp câu hỏi mở ngoài đời thực.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-rose-300 block mb-0.5">2. Học vẹt cơ học, tách rời ngữ nghĩa và tư duy:</strong>
+                            Không giải thích bản chất ngữ pháp khiến học sinh biến đổi câu như lắp công thức toán mà không hiểu sâu sắc thái nghĩa.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-rose-300 block mb-0.5">3. Gây nhàm chán, mệt mỏi (Drill Fatigue):</strong>
+                            Việc lặp đi lặp lại một cấu trúc hàng chục lần làm giảm hứng thú học tập và kìm hãm sự sáng tạo cá nhân.
+                        </li>
+                        <li class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/80">
+                            <strong class="text-rose-300 block mb-0.5">4. Giáo viên độc chiếm trung tâm, xem nhẹ Đọc – Viết:</strong>
+                            Học sinh hoàn toàn bị động chờ lệnh (Stimulus) từ giáo viên; kỹ năng Đọc và Viết bị trì hoãn ở giai đoạn đầu.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // ==================== AUDIO & SPEECH SYNTHESIS ENGINE ====================
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx && AudioCtx) {
+                audioCtx = new AudioCtx();
+            }
+        }
+
+        function playTone(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+                if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.09); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.18); // G5
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+                    osc.start(now);
+                    osc.stop(now + 0.38);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(190, now);
+                    osc.frequency.setValueAtTime(140, now + 0.12);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(420, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                }
+            } catch (e) {
+                // Ignore audio errors on restricted devices
+            }
+        }
+
+        function speakText(text) {
+            if (!soundEnabled || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const cleanText = text.replace(/["«»]/g, '');
+                const utter = new SpeechSynthesisUtterance(cleanText);
+                utter.lang = 'en-US';
+                utter.rate = 0.95;
+                window.speechSynthesis.speak(utter);
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundIcon').innerText = soundEnabled ? '🔊' : '🔇';
+            document.getElementById('soundLabel').innerText = soundEnabled
+                ? 'Âm thanh & Giọng đọc: BẬT'
+                : 'Âm thanh & Giọng đọc: TẮT';
+        }
+
+        // ==================== GAME DATA (5 ROUNDS OF ALM) ====================
+        const gameLevels = [
+            {
+                round: "Vòng 1 / 5",
+                title: "Repetition Drill (Luyện Lặp Lại Nguyên Văn)",
+                speakerAvatar: "👨‍🏫",
+                speakerRole: "Giáo viên (Stimulus - Mẫu câu chuẩn)",
+                drillTag: "Nghe & Bắt chước nguyên văn • Không dịch nghĩa",
+                prompt: "I am going to the post office.",
+                subPrompt: "🎯 Nhiệm vụ: Bấm các từ theo đúng thứ tự câu mẫu của giáo viên!",
+                cue: null,
+                mode: "tokens",
+                tokens: ["I", "am", "going", "to", "the", "post", "office."],
+                distractors: ["go", "at"],
+                insight: "Ở bước Repetition Drill, học sinh lặp lại chính xác mẫu câu của giáo viên để rèn phát âm, trọng âm và ghi nhớ cấu trúc nguyên khối (chunk) mà không cần phân tích ngữ pháp.",
+                gaugeDelta: { reflex: 18, accuracy: 15, fatigue: 10, comm: 0 }
+            },
+            {
+                round: "Vòng 2 / 5",
+                title: "Single-Slot Substitution Drill (Luyện Thay Thế Đơn)",
+                speakerAvatar: "👨‍🏫",
+                speakerRole: "Giáo viên (Giữ nguyên khung câu, chỉ đổi 1 từ)",
+                drillTag: "Thay từ gợi ý (Cue) vào đúng vị trí danh từ chỉ nơi chốn",
+                prompt: "I am going to the [post office].",
+                subPrompt: "🎯 Nhiệm vụ: Giáo viên vừa hô từ gợi ý mới! Hãy chọn câu đã thay thế đúng thật nhanh!",
+                cue: "supermarket (siêu thị)",
+                mode: "choice",
+                options: [
+                    { text: "I am going to the supermarket.", correct: true },
+                    { text: "I going to the supermarket.", correct: false, errReason: "Thiếu động từ to-be 'am'! Lặp lại đúng mẫu!" },
+                    { text: "I am supermarket going to the.", correct: false, errReason: "Sai vị trí ô trống (slot) trong cấu trúc!" },
+                    { text: "I would like to go shopping at the supermarket because it's cheap.", correct: false, errReason: "ALM không cho phép tự ý sáng tạo câu ngoài mẫu!" }
+                ],
+                insight: "Substitution Drill giúp học sinh hiểu ngầm các 'ô trống cấu trúc' (structural slots). Học sinh hình thành phản xạ thay thế hàng loạt từ vựng vào cùng một khung câu cố định.",
+                gaugeDelta: { reflex: 22, accuracy: 18, fatigue: 18, comm: 2 }
+            },
+            {
+                round: "Vòng 3 / 5",
+                title: "Transformation Drill (Luyện Biến Đổi Cấu Trúc)",
+                speakerAvatar: "👨‍🏫",
+                speakerRole: "Giáo viên (Lệnh chuyển đổi câu)",
+                drillTag: "Biến đổi câu Khẳng định → Câu Nghi vấn (Question)",
+                prompt: "She plays tennis every Sunday.",
+                subPrompt: "🎯 Nhiệm vụ: Chuyển câu của giáo viên sang dạng CÂU HỎI (Question) theo đúng quy tắc!",
+                cue: "Đổi sang: QUESTION (?)",
+                mode: "choice",
+                options: [
+                    { text: "Does she play tennis every Sunday?", correct: true },
+                    { text: "Do she plays tennis every Sunday?", correct: false, errReason: "Sai trợ động từ 'Does' và động từ nguyên mẫu 'play'!" },
+                    { text: "Is she plays tennis every Sunday?", correct: false, errReason: "Sai cấu trúc câu hỏi thì Hiện tại đơn!" },
+                    { text: "She does not play tennis every Sunday.", correct: false, errReason: "Đây là câu phủ định, giáo viên yêu cầu câu hỏi!" }
+                ],
+                insight: "Transformation Drill rèn luyện thao tác biến đổi cấu trúc câu (khẳng định ↔ phủ định ↔ nghi vấn, chủ động ↔ bị động) một cách tự động và chuẩn xác.",
+                gaugeDelta: { reflex: 20, accuracy: 22, fatigue: 25, comm: 2 }
+            },
+            {
+                round: "Vòng 4 / 5",
+                title: "Question-Answer Drill & Immediate Correction (Hỏi Đáp Khuôn Mẫu)",
+                speakerAvatar: "👨‍🏫",
+                speakerRole: "Giáo viên (Kiểm tra phản xạ & Sửa lỗi tức thì)",
+                drillTag: "Trả lời theo đúng mẫu câu và từ gợi ý",
+                prompt: "Are you going to the library?",
+                subPrompt: "🎯 Nhiệm vụ: Trả lời theo từ gợi ý (Cue) của giáo viên mà không chần chừ!",
+                cue: "No / hospital",
+                mode: "choice",
+                options: [
+                    { text: "No, I'm not. I am going to the hospital.", correct: true },
+                    { text: "No, I don't go to the hospital.", correct: false, errReason: "Sai thì! Câu hỏi dùng 'Are you going to...'!" },
+                    { text: "Yes, I am going to the library.", correct: false, errReason: "Sai với từ gợi ý 'No / hospital' của giáo viên!" },
+                    { text: "Actually, I feel a bit sick today so I might see a doctor.", correct: false, errReason: "Trong giờ Drill ALM, bạn phải trả lời đúng khuôn mẫu đã dạy!" }
+                ],
+                insight: "Sau 4 vòng luyện Drill cường độ cao, chỉ số Phản Xạ Cấu Trúc và Độ Chính Xác của học sinh đạt gần 100%! Nhưng điều gì sẽ xảy ra khi bước ra khỏi lớp học? Hãy xem Vòng 5!",
+                gaugeDelta: { reflex: 15, accuracy: 15, fatigue: 25, comm: 0 }
+            },
+            {
+                round: "Vòng 5 / 5 • PLOT TWIST!",
+                title: "Thử Thách Đời Thực (Bộc Lộ Hạn Chế Lớn Nhất Của ALM)",
+                speakerAvatar: "🧳",
+                speakerRole: "Khách du lịch nước ngoài tại Quán Cà Phê (Tình huống Mở)",
+                drillTag: "⚠️ Không có từ gợi ý (No Cue) • Câu hỏi mở đòi hỏi suy nghĩ cá nhân!",
+                prompt: "Hi! It's raining heavily outside and my flight was delayed. How do you usually spend a rainy afternoon in your hometown?",
+                subPrompt: "😱 Bạn đã thuộc lòng 100% các mẫu câu trong lớp ALM! Hãy chọn cách trả lời vị khách này:",
+                cue: "Tình huống giao tiếp tự nhiên ngoài kịch bản!",
+                mode: "twist",
+                options: [
+                    {
+                        text: "🤖 \"I am going to the post office. Does she play tennis every Sunday?\"",
+                        tag: "Lặp lại máy móc mẫu câu ALM đã thuộc",
+                        outcome: "Bối rối toàn tập! Bạn phát âm cực chuẩn và đúng ngữ pháp 100%, nhưng câu trả lời hoàn toàn vô nghĩa trong ngữ cảnh thực tế vì bạn chỉ được học 'nhại lại' mẫu câu cố định!"
+                    },
+                    {
+                        text: "😰 \"Ờm... Rainy... I am going to the... ờm... (Đứng hình vì chưa từng được dạy tự diễn đạt ý cá nhân!)\"",
+                        tag: "Cố gắng tự nghĩ câu mới ngoài mẫu",
+                        outcome: "Quá tải hệ thống! Dù đạt điểm tuyệt đối trong giờ luyện Pattern Drills trên lớp, bạn lại lúng túng không biết cách kết nối từ vựng để bày tỏ suy nghĩ và cảm xúc thật của bản thân."
+                    }
+                ],
+                insight: "ĐÂY CHÍNH LÀ HẠN CHẾ LỚN NHẤT CỦA ALM: Học sinh đạt độ chính xác cơ học rất cao trong phòng học (Thế mạnh), nhưng lại thiếu năng lực giao tiếp tự nhiên (Communicative Competence) khi gặp các tình huống mở ngoài đời thực!",
+                gaugeDelta: { reflex: 0, accuracy: 0, fatigue: 10, comm: -5 }
+            }
+        ];
+
+        // ==================== STATE VARIABLES ====================
+        let currentLevelIndex = 0;
+        let streak = 0;
+        let score = 0;
+        let selectedTokens = [];
+        let shuffledPool = [];
+        let timerInterval = null;
+        let timeLeft = 100;
+        let roundResolved = false;
+
+        let gauges = {
+            reflex: 25,
+            accuracy: 30,
+            fatigue: 10,
+            comm: 12
+        };
+
+        // ==================== GAME LOGIC ====================
+        function loadLevel(index) {
+            roundResolved = false;
+            currentLevelIndex = index;
+            const lvl = gameLevels[index];
+
+            // Update Header & Prompt
+            document.getElementById('roundBadge').innerText = lvl.round;
+            document.getElementById('roundTitle').innerText = lvl.title;
+            document.getElementById('speakerAvatar').innerText = lvl.speakerAvatar;
+            document.getElementById('speakerRole').innerText = lvl.speakerRole;
+            document.getElementById('drillTypeTag').innerText = lvl.drillTag;
+            document.getElementById('teacherPrompt').innerText = `"${lvl.prompt}"`;
+            document.getElementById('teacherSubPrompt').innerText = lvl.subPrompt;
+            document.getElementById('pedagogicalNote').innerText = lvl.insight;
+
+            // Cue Banner
+            const cueBanner = document.getElementById('cueBanner');
+            if (lvl.cue) {
+                cueBanner.classList.remove('hidden');
+                document.getElementById('cueValue').innerText = lvl.cue;
+            } else {
+                cueBanner.classList.add('hidden');
+            }
+
+            // Hide Feedback Banner
+            document.getElementById('feedbackBanner').classList.add('hidden');
+
+            // Highlight Behaviorist Step 1 (Stimulus)
+            highlightBehaviorStep(1);
+
+            // Render Response Area
+            const area = document.getElementById('responseArea');
+            area.innerHTML = '';
+
+            if (lvl.mode === 'tokens') {
+                selectedTokens = [];
+                shuffledPool = [...lvl.tokens, ...lvl.distractors].sort(() => Math.random() - 0.5);
+                renderTokenBuilder(area, lvl);
+            } else if (lvl.mode === 'choice') {
+                renderChoices(area, lvl);
+            } else if (lvl.mode === 'twist') {
+                renderTwistChoices(area, lvl);
+            }
+
+            // Speak Prompt automatically after brief delay
+            setTimeout(() => {
+                speakText(lvl.prompt.replace(/\[|\]/g, ''));
+            }, 300);
+
+            startTimer(lvl.mode === 'twist' ? 150 : 100);
+        }
+
+        function startTimer(speedFactor) {
+            clearInterval(timerInterval);
+            timeLeft = 100;
+            const bar = document.getElementById('timerBar');
+            bar.style.width = '100%';
+
+            timerInterval = setInterval(() => {
+                if (roundResolved) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                timeLeft -= 0.8;
+                bar.style.width = Math.max(0, timeLeft) + '%';
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, speedFactor);
+        }
+
+        function handleTimeout() {
+            if (currentLevelIndex === 4) return; // Don't fail on twist round
+            playTone('error');
+            streak = 0;
+            updateScoreUI();
+            showFeedback(
+                false,
+                "⏰ Quá chậm! (Phản xạ chưa tự động)",
+                "Trong phương pháp ALM, học sinh phải bật ra câu trả lời ngay lập tức mà không được dừng lại suy nghĩ hay dịch ngầm! Hãy thử lại vòng này!",
+                true
+            );
+        }
+
+        // Render Mode 1: Token Builder (Repetition Drill)
+        function renderTokenBuilder(container, lvl) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'space-y-4';
+
+            // Constructed Sentence Box
+            const answerBox = document.createElement('div');
+            answerBox.id = 'tokenAnswerBox';
+            answerBox.className = 'min-h-[58px] p-3 rounded-xl bg-slate-950/80 border-2 border-dashed border-indigo-500/50 flex flex-wrap items-center gap-2';
+            answerBox.innerHTML = `<span class="text-xs text-slate-400 italic">Bấm các từ bên dưới để lặp lại đúng câu mẫu...</span>`;
+
+            // Word Bank
+            const bankBox = document.createElement('div');
+            bankBox.id = 'tokenBankBox';
+            bankBox.className = 'flex flex-wrap gap-2';
+
+            shuffledPool.forEach((word, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-game px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white font-bold text-sm border border-slate-600 shadow';
+                btn.innerText = word;
+                btn.onclick = () => selectToken(idx, word, btn, lvl);
+                bankBox.appendChild(btn);
+            });
+
+            // Clear button
+            const ctrlRow = document.createElement('div');
+            ctrlRow.className = 'flex justify-end';
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'text-xs text-slate-400 hover:text-white underline';
+            clearBtn.innerText = '↺ Xóa chọn lại';
+            clearBtn.onclick = () => loadLevel(currentLevelIndex);
+            ctrlRow.appendChild(clearBtn);
+
+            wrapper.appendChild(answerBox);
+            wrapper.appendChild(bankBox);
+            wrapper.appendChild(ctrlRow);
+            container.appendChild(wrapper);
+        }
+
+        function selectToken(idx, word, btnEl, lvl) {
+            if (roundResolved) return;
+            playTone('click');
+            highlightBehaviorStep(2);
+
+            const expectedWord = lvl.tokens[selectedTokens.length];
+            if (word !== expectedWord) {
+                // Immediate Error Correction!
+                playTone('error');
+                btnEl.classList.add('shake-anim', 'bg-rose-600');
+                setTimeout(() => btnEl.classList.remove('shake-anim', 'bg-rose-600'), 450);
+                streak = 0;
+                updateScoreUI();
+                showFeedback(
+                    false,
+                    "🚨 Sửa lỗi tức thì (Immediate Error Correction)!",
+                    `Giáo viên: "No! Listen carefully and repeat again!" — Từ tiếp theo phải là "${expectedWord}", không phải "${word}". ALM không để học sinh mắc lỗi sai cấu trúc.`,
+                    false
+                );
+                return;
+            }
+
+            // Correct word
+            selectedTokens.push(word);
+            btnEl.disabled = true;
+            btnEl.classList.add('opacity-30', 'cursor-not-allowed');
+
+            const answerBox = document.getElementById('tokenAnswerBox');
+            answerBox.innerHTML = '';
+            selectedTokens.forEach(t => {
+                const chip = document.createElement('span');
+                chip.className = 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold text-sm shadow';
+                chip.innerText = t;
+                answerBox.appendChild(chip);
+            });
+
+            if (selectedTokens.length === lvl.tokens.length) {
+                // Completed sentence!
+                roundResolved = true;
+                clearInterval(timerInterval);
+                playTone('success');
+                speakText(lvl.prompt);
+                streak++;
+                score += 100;
+                updateScoreUI();
+                applyGauges(lvl.gaugeDelta);
+                highlightBehaviorStep(3);
+                showFeedback(
+                    true,
+                    "🏆 Củng cố tích cực (Positive Reinforcement): \"Very good!\"",
+                    "Bạn đã lặp lại chuẩn xác 100%! Giáo viên khen ngợi ngay lập tức để hình thành thói quen tốt (Good Habit Formation).",
+                    false
+                );
+            }
+        }
+
+        // Render Mode 2: Multiple Choice Drills (Substitution, Transformation, Q&A)
+        function renderChoices(container, lvl) {
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+            lvl.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-game p-4 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-600 text-left transition flex items-start gap-3';
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">🗣️</span>
+                    <span class="font-bold text-sm sm:text-base text-white leading-snug">${opt.text}</span>
+                `;
+                btn.onclick = () => {
+                    if (roundResolved) return;
+                    highlightBehaviorStep(2);
+                    if (opt.correct) {
+                        roundResolved = true;
+                        clearInterval(timerInterval);
+                        btn.className = 'p-4 rounded-xl bg-emerald-600/30 border-2 border-emerald-400 text-left flex items-start gap-3';
+                        playTone('success');
+                        speakText(opt.text);
+                        streak++;
+                        score += 120;
+                        updateScoreUI();
+                        applyGauges(lvl.gaugeDelta);
+                        highlightBehaviorStep(3);
+                        showFeedback(
+                            true,
+                            "🏆 Củng cố tích cực (Positive Reinforcement): \"Excellent!\"",
+                            "Biến đổi mẫu câu cực kỳ chính xác và không cần dịch ngầm! Phản xạ cấu trúc của bạn đã tăng mạnh.",
+                            false
+                        );
+                    } else {
+                        btn.classList.add('shake-anim', 'border-rose-500', 'bg-rose-950/40');
+                        playTone('error');
+                        streak = 0;
+                        updateScoreUI();
+                        highlightBehaviorStep(3);
+                        showFeedback(
+                            false,
+                            "🚨 Sửa lỗi tức thì (Immediate Error Correction)!",
+                            `Giáo viên chặn lỗi ngay: "${opt.errReason}" — Hãy chọn lại câu đúng mẫu!`,
+                            false
+                        );
+                    }
+                };
+                grid.appendChild(btn);
+            });
+
+            container.appendChild(grid);
+        }
+
+        // Render Mode 3: Round 5 Real-World Plot Twist
+        function renderTwistChoices(container, lvl) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'space-y-3';
+
+            lvl.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-game w-full p-4 rounded-xl bg-slate-800/95 hover:bg-rose-950/40 border border-amber-500/40 text-left transition space-y-1';
+                btn.innerHTML = `
+                    <div class="text-xs font-bold uppercase tracking-wider text-amber-300">${opt.tag}</div>
+                    <div class="font-bold text-sm sm:text-base text-white">${opt.text}</div>
+                `;
+                btn.onclick = () => {
+                    if (roundResolved) return;
+                    roundResolved = true;
+                    clearInterval(timerInterval);
+                    playTone('error');
+                    applyGauges(lvl.gaugeDelta);
+                    renderFinalSummaryModal(opt.outcome);
+                };
+                wrapper.appendChild(btn);
+            });
+
+            container.appendChild(wrapper);
+        }
+
+        function renderFinalSummaryModal(outcomeText) {
+            const area = document.getElementById('responseArea');
+            area.innerHTML = `
+                <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-rose-950/70 via-slate-900 to-indigo-950/70 border-2 border-rose-500/50 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="text-3xl">🎭</span>
+                        <div>
+                            <h3 class="text-base sm:text-lg font-extrabold text-rose-300">
+                                KẾT QUẢ THỰC TẾ: Sự Lệch Pha Giữa "Thuộc Mẫu Câu" & "Giao Tiếp Thật"
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">${outcomeText}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs">
+                            <strong class="text-emerald-300 block mb-1">✅ Thế mạnh ALM bạn vừa trải nghiệm (Vòng 1-4):</strong>
+                            Phát âm chuẩn, thuộc lòng cấu trúc nhanh, độ chính xác ngữ pháp hình thái cực cao (<strong>90%+</strong>), không tốn thời gian dịch sang tiếng mẹ đẻ.
+                        </div>
+                        <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs">
+                            <strong class="text-rose-300 block mb-1">⚠️ Hạn chế ALM vừa bộc lộ (Vòng 5):</strong>
+                            Học vẹt cơ học theo lệnh (Stimulus), mỏi mệt vì lặp lại (Drill Fatigue <strong>88%</strong>), và lúng túng khi phải tự diễn đạt ý tưởng cá nhân ngoài kịch bản!
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 justify-end pt-2">
+                        <button onclick="switchTab('sandbox')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm">
+                            🔬 Mở Phòng Thí Nghiệm Drill
+                        </button>
+                        <button onclick="switchTab('debrief')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm">
+                            📊 Xem Bảng Tổng Kết Thuyết Trình
+                        </button>
+                        <button onclick="resetGame()" class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs sm:text-sm">
+                            🔄 Chơi Lại Từ Vòng 1
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showFeedback(isSuccess, title, desc, isTimeout) {
+            const banner = document.getElementById('feedbackBanner');
+            const icon = document.getElementById('feedbackIcon');
+            const titleEl = document.getElementById('feedbackTitle');
+            const descEl = document.getElementById('feedbackDesc');
+            const nextBtn = document.getElementById('nextStepBtn');
+
+            banner.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
+            if (isSuccess) {
+                banner.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
+                icon.innerText = '✅';
+                titleEl.className = 'font-bold text-emerald-300';
+                nextBtn.classList.remove('hidden');
+                nextBtn.innerText = currentLevelIndex < gameLevels.length - 1 ? 'Sang Vòng Tiếp Theo →' : 'Xem Tổng Kết';
+                nextBtn.onclick = () => nextQuestion();
+            } else {
+                banner.classList.add('bg-rose-950/80', 'border-rose-500/50');
+                icon.innerText = '🚨';
+                titleEl.className = 'font-bold text-rose-300';
+                if (isTimeout) {
+                    nextBtn.classList.remove('hidden');
+                    nextBtn.innerText = 'Thử Lại Vòng Này ↺';
+                    nextBtn.onclick = () => loadLevel(currentLevelIndex);
+                } else {
+                    nextBtn.classList.add('hidden');
+                }
+            }
+
+            titleEl.innerText = title;
+            descEl.innerText = desc;
+        }
+
+        function nextQuestion() {
+            if (currentLevelIndex < gameLevels.length - 1) {
+                loadLevel(currentLevelIndex + 1);
+            }
+        }
+
+        function updateScoreUI() {
+            document.getElementById('streakCount').innerText = streak;
+            document.getElementById('scoreCount').innerText = score;
+        }
+
+        function applyGauges(delta) {
+            gauges.reflex = Math.min(100, Math.max(5, gauges.reflex + delta.reflex));
+            gauges.accuracy = Math.min(100, Math.max(5, gauges.accuracy + delta.accuracy));
+            gauges.fatigue = Math.min(100, Math.max(5, gauges.fatigue + delta.fatigue));
+            gauges.comm = Math.min(100, Math.max(5, gauges.comm + delta.comm));
+
+            document.getElementById('gaugeReflexText').innerText = gauges.reflex + '%';
+            document.getElementById('gaugeReflexBar').style.width = gauges.reflex + '%';
+
+            document.getElementById('gaugeAccuracyText').innerText = gauges.accuracy + '%';
+            document.getElementById('gaugeAccuracyBar').style.width = gauges.accuracy + '%';
+
+            document.getElementById('gaugeFatigueText').innerText = gauges.fatigue + '%';
+            document.getElementById('gaugeFatigueBar').style.width = gauges.fatigue + '%';
+
+            document.getElementById('gaugeCommText').innerText = gauges.comm + '%';
+            document.getElementById('gaugeCommBar').style.width = gauges.comm + '%';
+        }
+
+        function highlightBehaviorStep(step) {
+            const s1 = document.getElementById('stepStimulus');
+            const s2 = document.getElementById('stepResponse');
+            const s3 = document.getElementById('stepReinforce');
+            [s1, s2, s3].forEach(el => {
+                el.className = 'p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 transition-all';
+            });
+            if (step === 1) s1.className = 'p-2.5 rounded-xl bg-indigo-500/30 border-2 border-indigo-400 scale-105 transition-all';
+            if (step === 2) s2.className = 'p-2.5 rounded-xl bg-amber-500/30 border-2 border-amber-400 scale-105 transition-all';
+            if (step === 3) s3.className = 'p-2.5 rounded-xl bg-emerald-500/30 border-2 border-emerald-400 scale-105 transition-all';
+        }
+
+        function speakCurrentPrompt() {
+            const lvl = gameLevels[currentLevelIndex];
+            speakText(lvl.prompt.replace(/\[|\]/g, ''));
+        }
+
+        function resetGame() {
+            streak = 0;
+            score = 0;
+            gauges = { reflex: 25, accuracy: 30, fatigue: 10, comm: 12 };
+            updateScoreUI();
+            applyGauges({ reflex: 0, accuracy: 0, fatigue: 0, comm: 0 });
+            switchTab('game');
+            loadLevel(0);
+        }
+
+        // ==================== TAB 2: SANDBOX DATA & LOGIC ====================
+        const sandboxData = [
+            {
+                title: "Kỹ thuật 1: Repetition Drill (Luyện Lặp Lại Nguyên Văn)",
+                rule: "📌 Nguyên tắc: Giáo viên đọc mẫu chuẩn xác – Học sinh nghe và nhại lại nguyên văn ngay lập tức.",
+                examples: [
+                    { cueLabel: "Mẫu câu 1", teacher: "I bought a new raincoat yesterday.", cueNote: "Giáo viên đọc mẫu", student: "I bought a new raincoat yesterday.", studentNote: "Cả lớp đồng thanh lặp lại đúng ngữ điệu" },
+                    { cueLabel: "Mẫu câu 2", teacher: "Would you mind opening the window?", cueNote: "Giáo viên đọc mẫu nối âm", student: "Would you mind opening the window?", studentNote: "Học sinh bắt chước nối âm 'Would you'" }
+                ]
+            },
+            {
+                title: "Kỹ thuật 2: Substitution Drill (Luyện Thay Thế Đơn)",
+                rule: "📌 Nguyên tắc: Giữ nguyên khung cấu trúc câu, giáo viên hô từ gợi ý (Cue) và học sinh lập tức lắp vào ô trống.",
+                examples: [
+                    { cueLabel: "Cue: hospital", teacher: "He is working at the [bank]. → Cue: hospital!", cueNote: "Thay danh từ nơi chốn", student: "He is working at the hospital.", studentNote: "Tự động thay từ vào đúng vị trí" },
+                    { cueLabel: "Cue: library", teacher: "He is working at the [hospital]. → Cue: library!", cueNote: "Thay danh từ nơi chốn", student: "He is working at the library.", studentNote: "Phản xạ không cần dịch nghĩa" },
+                    { cueLabel: "Cue: They", teacher: "[He] is working at the library. → Cue: They!", cueNote: "Thay chủ ngữ kéo theo đổi to-be", student: "They are working at the library.", studentNote: "Tự động đổi 'is' thành 'are'" }
+                ]
+            },
+            {
+                title: "Kỹ thuật 3: Transformation Drill (Luyện Biến Đổi Cấu Trúc)",
+                rule: "📌 Nguyên tắc: Giáo viên đưa một câu gốc và yêu cầu biến đổi sang phủ định, nghi vấn hoặc bị động.",
+                examples: [
+                    { cueLabel: "Đổi sang: Phủ định (-)", teacher: "She knows how to swim. → Negative!", cueNote: "Khẳng định → Phủ định", student: "She does not know how to swim.", studentNote: "Thêm trợ động từ 'does not'" },
+                    { cueLabel: "Đổi sang: Nghi vấn (?)", teacher: "She knows how to swim. → Question!", cueNote: "Khẳng định → Câu hỏi", student: "Does she know how to swim?", studentNote: "Đảo trợ động từ lên đầu câu" },
+                    { cueLabel: "Đổi sang: Bị động", teacher: "The chef cooked the meal. → Passive!", cueNote: "Chủ động → Bị động", student: "The meal was cooked by the chef.", studentNote: "Biến đổi công thức ngữ pháp nhanh" }
+                ]
+            },
+            {
+                title: "Kỹ thuật 4: Question & Answer Drill (Luyện Hỏi – Đáp Khuôn Mẫu)",
+                rule: "📌 Nguyên tắc: Giáo viên đặt câu hỏi kèm từ gợi ý (Cue), học sinh trả lời nhanh theo đúng khuôn mẫu.",
+                examples: [
+                    { cueLabel: "Cue: Yes / every day", teacher: "Do you study English? (Cue: Yes / every day)", cueNote: "Hỏi - đáp khẳng định", student: "Yes, I do. I study English every day.", studentNote: "Trả lời tròn câu đúng cấu trúc" },
+                    { cueLabel: "Cue: No / French", teacher: "Do you study English? (Cue: No / French)", cueNote: "Hỏi - đáp phủ định", student: "No, I don't. I study French.", studentNote: "Phản xạ trả lời ngay lập tức" }
+                ]
+            }
+        ];
+
+        function loadSandboxDrill(drillIdx, exIdx = 0) {
+            for (let i = 0; i < 4; i++) {
+                const b = document.getElementById(`sbBtn-${i}`);
+                if (i === drillIdx) {
+                    b.className = "p-3.5 rounded-xl border text-left transition bg-indigo-600/30 border-indigo-400 text-white";
+                } else {
+                    b.className = "p-3.5 rounded-xl border text-left transition bg-slate-800/70 border-slate-700 text-slate-300 hover:bg-slate-800";
+                }
+            }
+
+            const d = sandboxData[drillIdx];
+            const ex = d.examples[exIdx];
+
+            document.getElementById('sbTitle').innerText = d.title;
+            document.getElementById('sbRule').innerText = d.rule;
+            document.getElementById('sbTeacherText').innerText = ex.teacher;
+            document.getElementById('sbCueNote').innerText = ex.cueNote;
+            document.getElementById('sbStudentText').innerText = ex.student;
+            document.getElementById('sbStudentNote').innerText = ex.studentNote;
+
+            const cueContainer = document.getElementById('sbCueButtons');
+            cueContainer.innerHTML = '';
+            d.examples.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = index === exIdx
+                    ? 'px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold text-xs shadow'
+                    : 'px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs border border-slate-600';
+                btn.innerText = item.cueLabel;
+                btn.onclick = () => {
+                    loadSandboxDrill(drillIdx, index);
+                    speakText(item.student);
+                };
+                cueContainer.appendChild(btn);
+            });
+        }
+
+        // ==================== TAB SWITCHER ====================
+        function switchTab(tabName) {
+            ['game', 'sandbox', 'debrief'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`tabBtn-${t}`).className =
+                    'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700';
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tabBtn-${tabName}`).className =
+                'px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30';
+
+            if (tabName !== 'game') {
+                clearInterval(timerInterval);
+            } else if (!roundResolved) {
+                startTimer(100);
+            }
+        }
+
+        // Initialize on load
+        window.onload = function () {
+            loadLevel(0);
+            loadSandboxDrill(0, 0);
+        };
+    </script>
+</body>
+</html>
